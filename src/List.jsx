@@ -6,7 +6,7 @@ export default class UiListComponent extends BaseComponent {
 
         return (
             <ul className='list-group' if='hasData'>
-                <li className='list-group-item' each='datum of getData'>
+                <li className='list-group-item' each='datum of data'>
                     #[datum.name]
                 </li>
                 <else if='hasError'>
@@ -22,19 +22,11 @@ export default class UiListComponent extends BaseComponent {
 
     hasData() {
 
-        //return false;
-
-        console.log('hasData', this,  this.data, this.data != undefined);
-
         return this.data != undefined;
 
     }
 
     hasError() {
-
-        console.log('hasError', this, this.error, this.error != undefined);
-
-        //return true;
 
         return this.error != undefined;
 
@@ -42,15 +34,7 @@ export default class UiListComponent extends BaseComponent {
 
     getData() {
 
-        console.log('getData', this, this.data);
-
         return this.data;
-
-    }
-
-    getString() {
-
-        return 'getStringTest';
 
     }
 

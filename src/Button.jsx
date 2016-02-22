@@ -6,7 +6,7 @@ export default class UiButtonComponent extends BaseComponent {
 
         return (
             <button
-                className='getClassName'
+                className='className'
                 onClick='clickHandler'
                 //onClick='#[props.action]'
             >

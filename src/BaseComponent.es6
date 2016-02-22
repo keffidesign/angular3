@@ -7,7 +7,7 @@ export default class BaseComponent {
     constructor(props) {
 
         this.state = {
-            props
+
         };
 
         this.internalConstructor();

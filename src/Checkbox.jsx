@@ -10,7 +10,6 @@ export default class UiCheckboxComponent extends BaseComponent {
             >
                 <input
                     type='checkbox'
-                    placeholder='Recipient`s username'
                     onChange='onChangeHandler'
                 />
                 <span class='form-group-addon' id='basic-addon3'>#[props.caption]</span>

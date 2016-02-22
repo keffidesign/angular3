@@ -9,17 +9,32 @@ export default class UiInputComponent extends BaseComponent {
                 className='form-group'
             >
                 <input
-                    type='text'
                     className='form-control'
-                    placeholder='Recipient`s username'
-                    onChange='onChangeHandler'
+                    value='value'
+                    type='text'
+                    placeholder='caption'
+                    onChange='valueChanged'
                 />
             </div>
         );
 
     }
 
-    onChangeHandler(e) {
+    getValue() {
+
+        //console.log('getValue', this.props.value);
+
+        return this.props.value || '';
+
+    }
+
+    getCaption() {
+
+        return this.props.caption || '';
+
+    }
+
+    valueChanged(e) {
 
         const value = e.target.value;
 
