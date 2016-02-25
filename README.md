@@ -1,61 +1,79 @@
-# Main Syntax
+# Reangulact
 
-#### Placeholders
-```
-#[path.to.data.or.function]
-```
-#[<...>] is a placeholder. Inserts value from scope to the string.
+This is an experimental library that allows to design UI components in pure-JS/JSX non-obtrusive way.
 
-    // example
-    <h1>Tasks: #[data.length]</h1>
+It is about to get the best from React and Angular2.
 
-#### Directive  ___if___ 
-```
-<h1 if='data'>Tasks: #[data.length]</h1>
-```
-* ___if___ directive check whether we need to show element.
-* ___data___ is any value or a function which returns such value.
-```
-<h1 if='data'>
-    Tasks: #[data.length]
-    <else>
-        <h1>There are no tasks</h1>
-    <else>
-</h1>
-```
-* ___<else></else>___ is used to provide alternative way.
+It can be runned over both of them, but not aware of any underlying UI framework or library based on.
 
-#### Directive  ___each___ 
-```
-<ul>
-    <li each='data'>#[datum.name]</li>
-</ul>
-```
-* ___each___ directive will clone an element which was defined on
-* ___data___ is an array or a function which returns an array.
-* ___datum___ is singular name for data in that case determines automaticly
+> Main Idea is to make things as abstract as possible, to extremely simplify sacrifying rarely used flexibility.
+
+## Features
+
+Most important features are following:
+ - reactive functional state-driven approach.
+ - JSX template is static (no any JS expression injections).
+ - `if` and `each` directives used to add dynamics.
+ - `$[key]` placeholder can be resolved into `state.key` or `this.key()`
+ - `init()`, `done()`, `update()` life-time hook can be used to manage state and adopt rendering.
+
+## Example 
+
+in Component.es6
+
+```javascript
+import template from 'template.jsx';
+
+class Button extends BaseComponent {
+
+    init() {
+        
+        super.init();
+        
+        this.state ={data:[{id:1, name:'Item 1', tags;[{name:'some'}]},...]};
+    }
+    done() {
+    
+        super.done();
+    }
+    
+    render(){
+    
+        return template;
+    }
+    
+    getCaption(){
+        return this.getState('caption') || 'Apply'
+    }
+    
+    getHasData(){
+        return !!this.getState('data')
+    }
+    
+    getHasError(){
+        return !!this.getState('error')
+    }
+
+}
 
 ```
-// Verbose version
-<ul>
-    <li each='d of data'>#[d.name]</li>
-</ul>
-```
 
-#### Example 
-```
+in template.jsx
+
+```javascript
+
 <ul if='hasData'>
-    <li each='datum of getData'>
-        #[getString]
+    <li each='datum of data'>
+        #[caption]
         #[datum.name]
         <ul>
-            <li each='datum.tags'>tag.name = #[tag.name] datum.name = #[datum.name]</li>
+            <li each='tag of datum.tags'>tag.name = #[tag.name] datum.name = #[datum.name]</li>
         </ul>
     </li>
     <else if='hasError'>
-        <span>Error occurred</span>
+        <span>Error: #[error.message]</span>
         <else>
-            <span>There is no data</span>
+            <span>No data</span>
         </else>
     </else>
 </ul>
