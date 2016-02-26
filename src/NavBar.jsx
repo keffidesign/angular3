@@ -6,10 +6,10 @@ export default class UiNavbarComponent extends BaseComponent {
 
         return (
             <nav class='navbar navbar-dark bg-primary navbar-full'>
-                <span class='navbar-brand'>Brand</span>
-                <ul if='hasData' class='nav navbar-nav'>
+                <span class='navbar-brand'>#[caption]</span>
+                <ul class='nav navbar-nav'>
                     <li class='nav-item' each='datum of data'>
-                        <a class='nav-link' href='#'>#[datumCaption] <span class='sr-only'>(current)</span></a>
+                        <a class='nav-link' href='#'>#[datum.caption] <span class='sr-only'>(current)</span></a>
                     </li>
                 </ul>
             </nav>
@@ -17,9 +17,16 @@ export default class UiNavbarComponent extends BaseComponent {
 
     }
 
-    getDatumCaption() {
+    getData() {
 
-        return this.get('datum.caption');
+        return this.get('data');
+
+    }
+
+
+    getCaption() {
+
+        return this.get('caption') || 'Brand';
 
     }
 

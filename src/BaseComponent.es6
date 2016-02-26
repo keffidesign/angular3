@@ -190,6 +190,7 @@ export default class BaseComponent {
                 //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
 
                 // !!! only the last sent emit is able to be applied.
+
                 if (dataLoading === this.get('dataLoading')) {
 
                     //this.log('data loaded', error, data);

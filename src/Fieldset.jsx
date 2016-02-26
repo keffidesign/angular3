@@ -59,7 +59,7 @@ export default class UiFieldsetComponent extends BaseComponent {
 
     getCaption() {
 
-        return this.get('meta.caption');
+        return this.get('meta.caption') || '';
 
     }
 
