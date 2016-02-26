@@ -12,24 +12,25 @@ export default class UiFieldsetComponent extends BaseComponent {
 
     render() {
 
-        //console.log('RENDER', this);
-
         return (
-            <fieldset className="form-group">
+            <fieldset class="form-group">
                 <Input
                     if='ifInput'
-                    caption='meta.caption'
-                    onValueChanged='valueChanged'
+                    testprop='propstest'
+                    caption='caption'
+                    valueChanged='valueChanged'
                     value='value'
                 />
                 <Checkbox
                     if='ifBoolean'
-                    caption='meta.caption'
-                    onValueChanged='valueChanged'
+                    caption='caption'
+                    valueChanged='valueChanged'
                 />
                 <Dropdown
                     if='ifEnumerable'
-                    caption='meta.caption'
+                    dataFrom='dataFrom'
+                    caption='caption'
+                    valueChanged='valueChanged'
                 />
             </fieldset>
         );
@@ -38,43 +39,47 @@ export default class UiFieldsetComponent extends BaseComponent {
 
     ifInput() {
 
-        return this.props.meta.type === STRING_TYPE || this.props.meta.type === 'number';
+        const type = this.get('meta.type');
+
+        return type === STRING_TYPE || type === 'number';
 
     }
 
     ifBoolean() {
 
-        return this.props.meta.type === BOOLEAN_TYPE;
+        return this.get('meta.type') === BOOLEAN_TYPE;
 
     }
 
     ifEnumerable() {
 
-        return this.props.meta.type === ENUMERABLE_TYPE;
+        return this.get('meta.type') === ENUMERABLE_TYPE;
 
     }
 
-    getMeta() {
+    getCaption() {
 
-        return this.props.meta;
+        return this.get('meta.caption');
 
     }
 
     getValue() {
 
-        //console.log('getValue:fieldset', this, this.props.value);
+        return this.get('value') || '';
 
-        return this.props.value || '';
+    }
+
+    getDataFrom() {
+
+        return this.get('meta.dataFrom');
 
     }
 
     valueChanged(value) {
 
-        const id = this.props.meta.id;
+        const id = this.get('meta.id');
 
-        //console.log('onValueChanged:fieldset', this, id);
-
-        this.props.onValueChanged(value, id);
+        this.hook('fieldValueChanged', value, id);
 
     }
 

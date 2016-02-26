@@ -5,13 +5,11 @@ export default class UiInputComponent extends BaseComponent {
     render() {
 
         return (
-            <div
-                className='form-group'
-            >
+            <div class='form-group'>
                 <input
-                    className='form-control'
-                    value='value'
+                    class='form-control'
                     type='text'
+                    value='value'
                     placeholder='caption'
                     onChange='valueChanged'
                 />
@@ -22,23 +20,21 @@ export default class UiInputComponent extends BaseComponent {
 
     getValue() {
 
-        //console.log('getValue', this.props.value);
-
-        return this.props.value || '';
+        return this.get('value') || '';
 
     }
 
     getCaption() {
 
-        return this.props.caption || '';
+        return this.get('caption') || '';
 
     }
 
     valueChanged(e) {
 
-        const value = e.target.value;
+        const value = e && e.target.value;
 
-        this.props.onValueChanged(value);
+        this.put('value', value);
 
     }
 

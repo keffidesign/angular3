@@ -4,16 +4,19 @@ import {Fieldset} from '../index.es6';
 
 export default class UiFormComponent extends BaseComponent {
 
-    render = (
-        <form>
-            <Fieldset
-                each='m of meta'
-                meta='m'
-                value='value'
-                onValueChanged='onFieldValueChanged'
-            />
-        </form>
-    );
+    render() {
+
+        return (
+            <form>
+                <Fieldset
+                    each='m of meta'
+                    meta='m'
+                    value='value'
+                    fieldValueChanged='fieldValueChanged'
+                 />
+            </form>
+        );
+    }
 
     getMeta() {
 
@@ -23,27 +26,29 @@ export default class UiFormComponent extends BaseComponent {
 
     getValue() {
 
-        if (!this.data) {
+        const data = this.get('data');
 
-            console.warn('Data object is not provided.');
+        const id = this.get('m.id');
 
-            this.data = {}
-
-        }
-
-        return this.data[this.m.id] || '';
+        return data && data[id] || '';
 
     }
 
-    onFieldValueChanged(value, id) {
+    fieldValueChanged(value, id) {
 
-        const data = this.state.data;
+        let data = this.get('data');
+
+        if (!data) {
+
+            data = {};
+
+            this.put('data', data);
+
+        }
 
         data[id] = value;
 
-        this.setState({data});
-
-        this.props.onDataChanged(data);
+        this.hook('dataChanged', data);
 
     }
 

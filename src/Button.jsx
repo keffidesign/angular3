@@ -6,9 +6,8 @@ export default class UiButtonComponent extends BaseComponent {
 
         return (
             <button
-                className='className'
+                class='className'
                 onClick='clickHandler'
-                //onClick='#[props.action]'
             >
                 #[props.caption]
             </button>
@@ -18,15 +17,15 @@ export default class UiButtonComponent extends BaseComponent {
 
     getClassName() {
 
-        const mode = this.props.mode;
+        const mode = this.get('mode');
 
         return `btn btn-sm${mode ? ` btn-${mode}`: ''}`
 
     }
 
-    clickHandler() {
+    clickHandler(e) {
 
-        this.props.onClick();
+        this.hook('onClick', e);
 
     }
 

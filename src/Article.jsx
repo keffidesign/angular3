@@ -5,8 +5,8 @@ export default class UiArticleComponent extends BaseComponent {
     render() {
 
         return (
-            <div  className='container'>
-                #[getChildren]
+            <div  class='container'>
+                #[children]
             </div>
         );
 
@@ -14,9 +14,7 @@ export default class UiArticleComponent extends BaseComponent {
 
     getChildren() {
 
-        console.log('getChildren', this);
-
-        return this.props.children;
+        return this.get('children');
 
     }
 

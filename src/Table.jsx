@@ -5,7 +5,7 @@ export default class UiTableComponent extends BaseComponent {
     render() {
 
         return (
-            <table className='table'>
+            <table class='table'>
                 <thead>
                     <tr>
                         <th each='column of columns'>#[column.caption]</th>
@@ -23,21 +23,15 @@ export default class UiTableComponent extends BaseComponent {
 
     getCellValue() {
 
-        //datum[column.id]
+        const index = this.get('column.id');
 
-        return this.datum[this.column.id];
+        return this.get('datum')[index];
 
     }
 
     getColumns() {
 
-        return this.props.meta;
-
-    }
-
-    getData() {
-
-        return this.data;
+        return this.get('meta');
 
     }
 

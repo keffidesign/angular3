@@ -5,24 +5,28 @@ export default class UiCheckboxComponent extends BaseComponent {
     render() {
 
         return (
-            <div
-                className='form-group'
-            >
+            <div class='form-group'>
                 <input
                     type='checkbox'
-                    onChange='onChangeHandler'
+                    onChange='changeHandler'
                 />
-                <span class='form-group-addon' id='basic-addon3'>#[props.caption]</span>
+                <span class='form-group-addon' id='basic-addon3'>#[caption]</span>
             </div>
         );
 
     }
 
-    onChangeHandler(e) {
+    getCaption() {
 
-        const value = e.target.checked;
+        return this.get('caption');
 
-        this.props.onValueChanged(value);
+    }
+
+    changeHandler(e) {
+
+        const value = e && e.target.checked;
+
+        this.put('value', value);
 
     }
 

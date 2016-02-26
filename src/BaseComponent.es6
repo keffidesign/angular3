@@ -4,13 +4,9 @@ let COUNTER = 0;
 
 export default class BaseComponent {
 
-    constructor(props) {
+    constructor(...opts) {
 
-        this.state = {
-
-        };
-
-        this.internalConstructor();
+        this.internalConstructor(...opts);
 
     }
 
@@ -18,24 +14,91 @@ export default class BaseComponent {
 
     render() {}
 
-    createElement() {
+    actionHandler(e, value) {
 
-        return null;
+        if (typeof value === 'function') value(e);
+
+        this.event(value).emit();
 
     }
 
-    actionHandler(value) {
+    get(key) {
 
-        this.event(value).emit();
+        //console.log('key', key, this.state);
+
+        return key
+            .split('.')
+            .reduce((r, token) => {
+
+                //console.log('r', r, token);
+
+                return r[token];
+
+            }, this.state);
+
+        //return this.state[key];
+
+    }
+
+    put(key, value) {
+
+        const state = this.state;
+
+        const newState = {};
+
+        key
+            .split('.')
+            .reduce((r, token, i, arr) => {
+
+                r[token] = (i === arr.length - 1) ? value : {};
+
+                return r;
+
+            }, newState);
+
+        this.update({...state, ...newState});
+
+        this.hook(`${key}Changed`, value);
+
+    }
+
+    update(state) {
+
+    }
+
+    /**
+     * Lifecycle hooks
+     */
+
+    init() {
+
+        (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
+            (key) => this.addEventListener(key, (params, cb) => {
+                this.reloadData();
+                cb();
+            })
+        );
+
+        if (!this.get('dataPreventInitialLoad')) {
+
+            this.reloadData();
+
+        }
+
+    }
+
+    done() {
+
+        this.isDone = true;
 
     }
 
     /**
      * Gets display name of component.
      */
-    getName() {
+    _name() {
 
-        return this.props.name || this._id;
+        return this.name || this._id;
     }
 
     /**
@@ -43,11 +106,11 @@ export default class BaseComponent {
      */
     toString() {
 
-        return this.getName();
+        return this._name();
 
     }
 
-    getTypeName() {
+    typeName() {
 
         const fn = this.constructor;
 
@@ -74,7 +137,7 @@ export default class BaseComponent {
 
     log(message, ...data) {
 
-        return event(`log://info`, {value: `${this.id}: ${message}`, data}).action();
+        return event(`log://info`, {value: `${this}: ${message}`, data}).action();
 
     }
 
@@ -84,15 +147,70 @@ export default class BaseComponent {
 
     }
 
-    emit(key, params, cb) {
+    setData(data, extraState) {
 
-        event(key, {data: params}).action(cb);
+        if (!this.isDone) {
+
+            this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
+
+            this.dataChanged(data);
+
+        }
 
     }
 
-    promit(key, params) {
+    dataChanged(data) {
 
-        return event(key, {data: params}).promise();
+        this.hook('dataChanged', data);
+
+    }
+
+    getData() {
+
+        return this.get('data');
+
+    }
+
+    hasData() {
+
+        return this.get('data') != undefined;
+
+    }
+
+    reloadData(key = this.get('dataFrom'), payload = this.get('dataFromPayload') || {}) {
+
+        if (key) {
+
+            const dataLoading = this.uniqueKey();
+
+            this.setState({data: null, error: null, dataLoading});
+
+            this.event(key).withData(payload).action((error, data) => {
+
+                //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
+
+                // !!! only the last sent emit is able to be applied.
+                if (dataLoading === this.get('dataLoading')) {
+
+                    //this.log('data loaded', error, data);
+
+                    this.setData(data, {error, dataLoading: false});
+
+                }
+
+            });
+        }
+    }
+
+    ////////////////////////
+    //// Routines
+    ///////////////////////
+
+    hook(key, ...args) {
+
+        const cb = this.get(key);
+
+        return cb && cb.apply(this, args) || null;
 
     }
 
