@@ -11,7 +11,7 @@ export default class UiInputComponent extends BaseComponent {
                     type='text'
                     value='value'
                     placeholder='caption'
-                    onChange='valueChanged'
+                    onChange='changeHandler'
                 />
             </div>
         );
@@ -30,7 +30,7 @@ export default class UiInputComponent extends BaseComponent {
 
     }
 
-    valueChanged(e) {
+    changeHandler(e) {
 
         const value = e && e.target.value;
 

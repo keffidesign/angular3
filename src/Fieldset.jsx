@@ -1,6 +1,6 @@
 import BaseComponent from './BaseComponent';
 
-import {Input, Checkbox, Dropdown} from '../index.es6'
+import {Input, Checkbox, Dropdown} from '../index.es6';
 
 const STRING_TYPE = 'string';
 
