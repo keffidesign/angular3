@@ -209,7 +209,7 @@ export default class BaseComponent {
 
     hook(key, ...args) {
 
-        const cb = this.get(key);
+        const cb = this.get(key) || this[key];
 
         return cb && cb.apply(this, args) || null;
 
