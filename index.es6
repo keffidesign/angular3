@@ -18,6 +18,8 @@ export {default as List} from './src/List.jsx';
 
 export {default as Button} from './src/Button.jsx';
 
+export {default as Page} from './src/Page.jsx';
+
 export {default as Form} from './src/Form.jsx';
 
 export {default as Fieldset} from './src/Fieldset.jsx';

@@ -6,13 +6,17 @@ export default class BaseComponent {
 
     constructor(...opts) {
 
+        this.$ = {};
+
         this.internalConstructor(...opts);
 
     }
 
-    internalConstructor() {}
+    internalConstructor() {
+    }
 
-    render() {}
+    render() {
+    }
 
     actionHandler(e, value) {
 
@@ -25,19 +29,25 @@ export default class BaseComponent {
     get(key) {
 
         //console.log('key', key, this.state);
+        let value = this.$[key] || this.state[key];
 
-        return key
-            .split('.')
-            .reduce((r, token) => {
-
-                //console.log('r', r, token);
-
-                return r[token];
-
-            }, this.state);
-
-        //return this.state[key];
-
+        if (value === undefined) {
+            const keys = key.split('.');
+            if (keys.length>1){
+                key = keys.shift();
+                let rr = this.$[key] || this.state[key];
+                if (rr){
+                    for (let k of keys) {
+                        value = rr[k];
+                        if (!value) {
+                            break;
+                        }
+                        rr = value;
+                    }
+                }
+            }
+        }
+        return value;
     }
 
     put(key, value) {
