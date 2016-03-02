@@ -183,24 +183,29 @@ export default class BaseComponent {
 
             const dataLoading = this.uniqueKey();
 
-            this.setState({data: null, error: null, dataLoading});
+            this.setState({data: null, error: null, dataLoading}, () => this.loadData(key, payload, dataLoading));
 
-            this.event(key).withData(payload).action((error, data) => {
-
-                //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
-
-                // !!! only the last sent emit is able to be applied.
-
-                if (dataLoading === this.get('dataLoading')) {
-
-                    //this.log('data loaded', error, data);
-
-                    this.setData(data, {error, dataLoading: false});
-
-                }
-
-            });
         }
+    }
+
+    loadData(key, payload, dataLoading) {
+
+        this.event(key).withData(payload).action((error, data) => {
+
+            //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
+
+            // !!! only the last sent emit is able to be applied.
+
+            if (dataLoading === this.get('dataLoading')) {
+
+                //this.log('data loaded', error, data);
+
+                this.setData(data, {error, dataLoading: false});
+
+            }
+
+        });
+
     }
 
     ////////////////////////
