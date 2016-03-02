@@ -53,14 +53,30 @@ export default class BaseComponent {
         this.update({...state, [key]: value});
     }
 
-    update(newState) {
+    setState(newState, cb) {
+        Object.assign(this, newState);
+        cb && cb();
+    }
 
-        const state = this.state;
+    update(newState, cb) {
 
-        for (let key of Object.keys(newState)) if (state[key]!==newState[key]) {
+        const prevState = this.state;
 
-            this.hook(`${key}Changed`, newState[key]);
-        }
+        const changedKeys = Object.keys(newState).filter(key=>(prevState[key]!==newState[key]));
+
+        this.setState(newState, (err)=>{
+
+            //console.log('changes', newState, prevState, Object.keys(newState));
+
+            for (let key of changedKeys) {
+
+                //console.log('changes', key, newState[key]);
+
+                this.hook(`${key}Changed`, newState[key]);
+            }
+
+            cb && cb();
+        });
     }
 
     /**
@@ -150,7 +166,6 @@ export default class BaseComponent {
             this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
 
             this.dataChanged(data);
-
         }
 
     }
@@ -183,7 +198,7 @@ export default class BaseComponent {
 
             //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
 
-            // !!! only the last sent emit is able to be applied.
+            // !!! only the last  sent emit is able to be applied.
 
             if (dataLoading === this.get('dataLoading')) {
 
@@ -204,6 +219,8 @@ export default class BaseComponent {
     hook(key, ...args) {
 
         const cb = this.get(key) || this[key];
+
+       // console.log('hook', key, cb);
 
         return cb && cb.apply(this, args) || null;
     }
