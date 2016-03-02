@@ -6,6 +6,8 @@ export default class BaseComponent {
 
     constructor(...opts) {
 
+        this._id = ++COUNTER;
+
         this.$ = {};
 
         this.internalConstructor(...opts);
@@ -16,14 +18,8 @@ export default class BaseComponent {
     }
 
     render() {
-    }
 
-    actionHandler(e, value) {
-
-        if (typeof value === 'function') value(e);
-
-        this.event(value).emit();
-
+        return this.constructor.TEMPLATE;
     }
 
     get(key) {
@@ -54,26 +50,17 @@ export default class BaseComponent {
 
         const state = this.state;
 
-        const newState = {};
-
-        key
-            .split('.')
-            .reduce((r, token, i, arr) => {
-
-                r[token] = (i === arr.length - 1) ? value : {};
-
-                return r;
-
-            }, newState);
-
-        this.update({...state, ...newState});
-
-        this.hook(`${key}Changed`, value);
-
+        this.update({...state, [key]: value});
     }
 
-    update(state) {
+    update(newState) {
 
+        const state = this.state;
+
+        for (let key of Object.keys(newState)) if (state[key]!==newState[key]) {
+
+            this.hook(`${key}Changed`, newState[key]);
+        }
     }
 
     /**
@@ -84,6 +71,7 @@ export default class BaseComponent {
 
         (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
             (key) => this.addEventListener(key, (params, cb) => {
+
                 this.reloadData();
                 cb();
             })
@@ -131,7 +119,6 @@ export default class BaseComponent {
     uniqueKey() {
 
         return `C${COUNTER++}`;
-
     }
 
     /**
@@ -142,7 +129,6 @@ export default class BaseComponent {
     addEventListener(key, handler) {
 
         event.on(`${key}#${this.id}`, handler);
-
     }
 
     log(message, ...data) {
@@ -169,16 +155,9 @@ export default class BaseComponent {
 
     }
 
-    dataChanged(data) {
-
-        this.hook('dataChanged', data);
-
-    }
-
     getData() {
 
         return this.get('data');
-
     }
 
     hasData() {
@@ -227,7 +206,6 @@ export default class BaseComponent {
         const cb = this.get(key) || this[key];
 
         return cb && cb.apply(this, args) || null;
-
     }
 
 }
