@@ -24,11 +24,11 @@ function addListeners(){
  */
 export default class Page extends BaseComponent {
 
-    componentWillMount() {
+    init() {
 
         this::addListeners();
 
-        super.componentWillMount();
+        super.init();
     }
 
     getRoutingParams() {

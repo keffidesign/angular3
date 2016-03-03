@@ -106,6 +106,7 @@ export default class BaseComponent {
 
         this.isDone = true;
 
+        event.off(`#${this._id}`);
     }
 
     /**
@@ -122,7 +123,6 @@ export default class BaseComponent {
     toString() {
 
         return this._name();
-
     }
 
     typeName() {
@@ -130,7 +130,6 @@ export default class BaseComponent {
         const fn = this.constructor;
 
         return fn.displayName || fn.name || /^function\s+([\w\$]+)\s*\(/.exec(fn.toString())[1];
-
     }
 
     uniqueKey() {
@@ -145,7 +144,7 @@ export default class BaseComponent {
      */
     addEventListener(key, handler) {
 
-        event.on(`${key}#${this.id}`, handler);
+        event.on(`${key}#${this._id}`, handler);
     }
 
     log(message, ...data) {
@@ -165,8 +164,6 @@ export default class BaseComponent {
         if (!this.isDone) {
 
             this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
-
-            this.dataChanged(data);
         }
 
     }
@@ -179,7 +176,6 @@ export default class BaseComponent {
     hasData() {
 
         return this.get('data') != undefined;
-
     }
 
     reloadData(key = this.get('dataFrom'), payload = this.get('dataFromPayload') || {}) {
@@ -189,7 +185,6 @@ export default class BaseComponent {
             const dataLoading = this.uniqueKey();
 
             this.setState({data: null, error: null, dataLoading}, () => this.loadData(key, payload, dataLoading));
-
         }
     }
 
@@ -210,7 +205,6 @@ export default class BaseComponent {
             }
 
         });
-
     }
 
     ////////////////////////
