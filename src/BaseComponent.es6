@@ -24,7 +24,6 @@ export default class BaseComponent {
 
     get(key) {
 
-        //console.log('key', key, this.state);
         let value = this.$[key] || this.state[key];
 
         if (value === undefined) {
@@ -35,6 +34,7 @@ export default class BaseComponent {
                 if (rr){
                     for (let k of keys) {
                         value = rr[k];
+                        //console.log('key', key, rr, keys, k , value);
                         if (!value) {
                             break;
                         }
