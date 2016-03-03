@@ -8,7 +8,7 @@ export default class BaseComponent {
 
         this._id = ++COUNTER;
 
-        this.$ = {};
+        this.$ = {}; // memoization cache
 
         this.internalConstructor(...opts);
 
@@ -22,19 +22,19 @@ export default class BaseComponent {
         return this.constructor.TEMPLATE;
     }
 
-    get(key) {
+    get(_key) {
 
-        let value = this.$[key] || this.state[key];
+        let value = this.$[_key] || this.state[_key];
 
         if (value === undefined) {
-            const keys = key.split('.');
+            const keys = _key.split('.');
             if (keys.length>1){
-                key = keys.shift();
+                const key = keys.shift();
                 let rr = this.$[key] || this.state[key];
                 if (rr){
                     for (let k of keys) {
                         value = rr[k];
-                        //console.log('key', key, rr, keys, k , value);
+                        // console.log('key', key, rr, keys, k , value);
                         if (!value) {
                             break;
                         }
@@ -43,7 +43,7 @@ export default class BaseComponent {
                 }
             }
         }
-        return value;
+        return value;// TODO this.$[_key] =
     }
 
     put(key, value) {
@@ -54,6 +54,7 @@ export default class BaseComponent {
     }
 
     setState(newState, cb) {
+        this.$ = {};
         Object.assign(this, newState);
         cb && cb();
     }
@@ -219,8 +220,6 @@ export default class BaseComponent {
     hook(key, ...args) {
 
         const cb = this.get(key) || this[key];
-
-       // console.log('hook', key, cb);
 
         return cb && cb.apply(this, args) || null;
     }
