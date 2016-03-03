@@ -17,6 +17,11 @@ export default class BaseComponent {
     internalConstructor() {
     }
 
+    initialState(props){
+
+        return {...props}
+    }
+
     render() {
 
         return this.constructor.TEMPLATE;
