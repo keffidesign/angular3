@@ -11,10 +11,11 @@ export default class BaseComponent {
         this.$ = {}; // memoization cache
 
         this.internalConstructor(...opts);
-
     }
 
-    internalConstructor() {
+    internalConstructor(props) {
+
+        this.state = this.initialState(props);
     }
 
     initialState(props){
@@ -31,11 +32,15 @@ export default class BaseComponent {
 
         let value = this.$[_key] || this.state[_key];
 
+
         if (value === undefined) {
             const keys = _key.split('.');
             if (keys.length>1){
                 const key = keys.shift();
-                let rr = this.$[key] || this.state[key];
+                let rr = this.$[key] || this[key] || this.state[key];
+
+                this.log('get:',key, rr,  this);
+
                 if (rr){
                     for (let k of keys) {
                         value = rr[k];
@@ -48,6 +53,8 @@ export default class BaseComponent {
                 }
             }
         }
+
+
         return value;// TODO this.$[_key] =
     }
 
@@ -105,6 +112,8 @@ export default class BaseComponent {
 
         }
 
+        this.log('init', this);
+
     }
 
     done() {
@@ -154,8 +163,10 @@ export default class BaseComponent {
 
     log(message, ...data) {
 
-        return event(`log://info`, {value: `${this}: ${message}`, data}).action();
+        //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
+        console.log(this._name(), message, data)
 
+        return message;
     }
 
     event(...sources) {
