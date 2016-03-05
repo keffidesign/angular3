@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent';
+import BaseComponent from '../BaseComponent.es6';
 
 import {Input, Checkbox, Dropdown} from '../index.es6';
 

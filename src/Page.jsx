@@ -1,5 +1,4 @@
-import BaseComponent from './BaseComponent.es6';
-
+import BaseComponent from '../BaseComponent.es6';
 
 function addListeners(){
 

@@ -1,10 +1,14 @@
 import {event} from 'applugins';
 
+const capitalize = (s) => (s.charAt(0).toUpperCase() + s.slice(1));
+
 let COUNTER = 0;
 
 export default class BaseComponent {
 
     constructor(...opts) {
+
+        this.log('constructor',opts, this);
 
         this._id = ++COUNTER;
 
@@ -30,8 +34,20 @@ export default class BaseComponent {
 
     get(_key) {
 
-        let value = this.$[_key] || this.state[_key];
+        const fnKey = `get${capitalize(_key)}`;
 
+        const factory = this.state[fnKey] || this[fnKey];
+
+        let value = factory || this.$[_key] || this.state[_key] || this[_key];
+
+        if (typeof value === 'function') {
+
+            value = this.$[_key] || (this.$[_key] = value.bind(this));
+
+            if (factory) {
+                value = value();
+            }
+        }
 
         if (value === undefined) {
             const keys = _key.split('.');
@@ -39,7 +55,7 @@ export default class BaseComponent {
                 const key = keys.shift();
                 let rr = this.$[key] || this[key] || this.state[key];
 
-                this.log('get:',key, rr,  this);
+                //this.log('get:',key, rr,  this);
 
                 if (rr){
                     for (let k of keys) {
@@ -54,7 +70,6 @@ export default class BaseComponent {
             }
         }
 
-
         return value;// TODO this.$[_key] =
     }
 
@@ -63,6 +78,14 @@ export default class BaseComponent {
         const state = this.state;
 
         this.update({...state, [key]: value});
+    }
+
+    putEachVar(k,v){
+
+        this.state[k] = v;
+
+        return 0;
+
     }
 
     setState(newState, cb) {
@@ -182,11 +205,6 @@ export default class BaseComponent {
             this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
         }
 
-    }
-
-    getData() {
-
-        return this.get('data');
     }
 
     hasData() {

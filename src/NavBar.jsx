@@ -1,4 +1,4 @@
-import BaseComponent from './BaseComponent';
+import BaseComponent from '../BaseComponent.es6';
 
 export default class UiNavbarComponent extends BaseComponent {
 
