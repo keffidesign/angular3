@@ -8,8 +8,6 @@ export default class BaseComponent {
 
     constructor(...opts) {
 
-        this.log('constructor',opts, this);
-
         this._id = ++COUNTER;
 
         this.$ = {}; // memoization cache
@@ -135,7 +133,7 @@ export default class BaseComponent {
 
         }
 
-        this.log('init', this);
+        //this.log('init', this);
 
     }
 
