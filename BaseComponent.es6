@@ -8,7 +8,7 @@ export default class BaseComponent {
 
     constructor(...opts) {
 
-        this._id = ++COUNTER;
+        this._id = this.constructor.name + (++COUNTER);
 
         this.$ = {}; // memoization cache
 
@@ -20,7 +20,7 @@ export default class BaseComponent {
         this.state = this.initialState(props);
     }
 
-    initialState(props){
+    initialState(props) {
 
         return {...props}
     }
@@ -49,13 +49,13 @@ export default class BaseComponent {
 
         if (value === undefined) {
             const keys = _key.split('.');
-            if (keys.length>1){
+            if (keys.length > 1) {
                 const key = keys.shift();
                 let rr = this.$[key] || this[key] || this.state[key];
 
                 //this.log('get:',key, rr,  this);
 
-                if (rr){
+                if (rr) {
                     for (let k of keys) {
                         value = rr[k];
                         // console.log('key', key, rr, keys, k , value);
@@ -78,7 +78,7 @@ export default class BaseComponent {
         this.update({...state, [key]: value});
     }
 
-    putEachVar(k,v){
+    putEachVar(k, v) {
 
         this.state[k] = v;
 
@@ -96,9 +96,9 @@ export default class BaseComponent {
 
         const prevState = this.state;
 
-        const changedKeys = Object.keys(newState).filter(key=>(prevState[key]!==newState[key]));
+        const changedKeys = Object.keys(newState).filter(key=>(prevState[key] !== newState[key]));
 
-        this.setState(newState, (err)=>{
+        this.setState(newState, (err)=> {
 
             //console.log('changes', newState, prevState, Object.keys(newState));
 
