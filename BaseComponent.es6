@@ -8,7 +8,7 @@ export default class BaseComponent {
 
     constructor(...opts) {
 
-        this._id = this.constructor.name + (++COUNTER);
+        this._id = this.typeName() + (++COUNTER);
 
         this.$ = {}; // memoization cache
 
@@ -164,7 +164,7 @@ export default class BaseComponent {
 
         const fn = this.constructor;
 
-        return fn.displayName || fn.name || /^function\s+([\w\$]+)\s*\(/.exec(fn.toString())[1];
+        return fn.displayName || fn.name || ((/^function\s+([\w\$]+)\s*\(/.exec(fn.toString())||[])[1]||'C');
     }
 
     uniqueKey() {
