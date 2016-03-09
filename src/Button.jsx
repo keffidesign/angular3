@@ -13,7 +13,7 @@ export default class UiButton extends Component {
             click=':onClick'
         >
             <i if=':icon' class=':(fa fa-(:icon))'></i>
-            <block if=':children'>:children</block>
+            <children/>
             <block if=':caption'>:caption</block>
         </button>
     );

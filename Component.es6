@@ -15,14 +15,14 @@ export default class Component {
         this.internalConstructor(...opts);
     }
 
-    internalConstructor(props) {
+    internalConstructor() {
 
-        this.state = this.initialState(props);
+        this.state = {...this.initialState(), ...this.props};
     }
 
-    initialState(props) {
+    initialState() {
 
-        return {...props}
+        return this.constructor.INITIAL_STATE || {};
     }
 
     ////////////////////////
@@ -117,7 +117,7 @@ export default class Component {
 
     setState(newState, cb) {
         //this.$ = {};
-        Object.assign(this, newState);
+        Object.assign(this.state, newState);
         cb && cb();
     }
 
