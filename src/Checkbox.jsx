@@ -8,21 +8,15 @@ export default class UiCheckboxComponent extends Component {
             <div class='form-group'>
                 <input
                     type='checkbox'
-                    onChange='changeHandler'
+                    chage=':change'
                 />
-                <span class='form-group-addon' id='basic-addon3'>#[caption]</span>
+                <span class='form-group-addon' id='basic-addon3'>:caption</span>
             </div>
         );
 
     }
 
-    getCaption() {
-
-        return this.get('caption');
-
-    }
-
-    changeHandler(e) {
+    change(e) {
 
         const value = e && e.target.checked;
 

@@ -6,7 +6,7 @@ export default class UiNavBarComponent extends Component {
 
         return (
             <nav class='navbar navbar-fixed-bottom bg-inverse'>
-                <span class='text-xs-center'>#[caption]</span>
+                <span class='text-xs-center'>:caption</span>
             </nav>
         );
 
@@ -14,7 +14,7 @@ export default class UiNavBarComponent extends Component {
 
     getCaption() {
 
-        return this.get('caption') || 'Copyright (c) 2016 Brand';
+        return this.get('props.caption') || 'Copyright (c) 2016 Brand';
 
     }
 
