@@ -1,6 +1,6 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
-export default class UiCheckboxComponent extends BaseComponent {
+export default class UiCheckboxComponent extends Component {
 
     render() {
 
@@ -27,7 +27,6 @@ export default class UiCheckboxComponent extends BaseComponent {
         const value = e && e.target.checked;
 
         this.put('value', value);
-
     }
 
 }

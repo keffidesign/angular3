@@ -1,21 +1,17 @@
 # Reangulact
 
-This is an experimental library that allows to design UI components in pure-JS/JSX non-obtrusive way.
+This is an experimental library that allows to design UI components in pure JS6/JSX non-obtrusive way.
 
-It is about to get the best from React and Angular2.
+It is about to get the best from React and Angular2 and can be run over both of them, but not aware of any underlying UI framework or library based on.
 
-It can be runned over both of them, but not aware of any underlying UI framework or library based on.
-
-> Main Idea is to make things as abstract as possible, to extremely simplify sacrifying rarely used flexibility.
+> To make things as abstract as possible, keep on declarative side.
 
 ## Features
 
 Most important features are following:
  - reactive functional state-driven approach.
- - JSX template is static (no any JS expression injections).
- - `if` and `each` directives used to add dynamics.
- - `$[key]` placeholder can be resolved into `state.key` or `this.key()`
- - `init()`, `done()`, `update()` life-time hook can be used to manage state and adopt rendering.
+ - static JSX template with `if/each` directives and `:key` placeholders.
+ - `init()`, `initialSate()`, `done()` life-cycle hooks.
 
 ## Example 
 
@@ -26,15 +22,9 @@ import template from 'template.jsx';
 
 class Button extends BaseComponent {
 
-    init() {
+    initialState(props) {
         
-        super.init();
-        
-        this.state ={data:[{id:1, name:'Item 1', tags;[{name:'some'}]},...]};
-    }
-    done() {
-    
-        super.done();
+        return { data:[ {id: 1, name: 'Item 1', tags:[{name:'some'}]}, ...props};
     }
     
     render(){
@@ -60,21 +50,25 @@ class Button extends BaseComponent {
 
 in template.jsx
 
-```javascript
+```html
+<div>
+    <h1>:caption</h1>
 
-<ul if='hasData'>
-    <li each='datum of data'>
-        #[caption]
-        #[datum.name]
-        <ul>
-            <li each='tag of datum.tags'>tag.name = #[tag.name] datum.name = #[datum.name]</li>
-        </ul>
-    </li>
-    <else if='hasError'>
-        <span>Error: #[error.message]</span>
-        <else>
-            <span>No data</span>
+    <ul if=":hasData">
+        <li each='datum of :data'>
+            <p>:datum.name</p>
+            <ul>
+                <li each='tag of :datum.tags'>: tag: (:tag.name) datum: (:datum.name)</li>
+            </ul>
+        </li>
+        <else if=':hasError'>
+            <span>:Error: (:error.message)</span>
+            <else>
+                <span>No data</span>
+            </else>
         </else>
-    </else>
-</ul>
+    </ul>
+    
+    <ui.Button caption=":(Apply  :caption)"/>
+</div>
 ```

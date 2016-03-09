@@ -1,7 +1,7 @@
 {
-  "name": "ui-components",
+  "name": "reangulact",
   "version": "0.0.1",
-  "description": "Collection of common components",
+  "description": "Unified Declarative Views. Applicable for both React and Angular2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

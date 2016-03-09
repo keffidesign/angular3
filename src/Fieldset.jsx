@@ -1,4 +1,4 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
 import {Input, Checkbox, Dropdown} from '../index.es6';
 
@@ -8,7 +8,7 @@ const BOOLEAN_TYPE = 'boolean';
 
 const ENUMERABLE_TYPE = 'enum';
 
-export default class UiFieldsetComponent extends BaseComponent {
+export default class UiFieldsetComponent extends Component {
 
     render() {
 

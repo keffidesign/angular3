@@ -1,21 +1,11 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
-export default class UiArticleComponent extends BaseComponent {
+export default class UiArticle extends Component {
 
-    render() {
-
-        return (
+    static TEMPLATE = (
             <div  class='container'>
-                #[children]
+                <children/>
             </div>
         );
-
-    }
-
-    getChildren() {
-
-        return this.get('children');
-
-    }
 
 }

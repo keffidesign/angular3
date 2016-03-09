@@ -1,6 +1,6 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
-export default class UiTitleComponent extends BaseComponent {
+export default class UiTitleComponent extends Component {
 
     render() {
 

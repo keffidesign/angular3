@@ -1,10 +1,10 @@
 import {event} from 'applugins';
 
-const capitalize = (s) => (s.charAt(0).toUpperCase() + s.slice(1));
+import {functionName, capitalize} from './Utils.es6';
 
 let COUNTER = 0;
 
-export default class BaseComponent {
+export default class Component {
 
     constructor(...opts) {
 
@@ -25,10 +25,46 @@ export default class BaseComponent {
         return {...props}
     }
 
+    ////////////////////////
+    //// Lifecycle hooks
+    ///////////////////////
+
+    init() {
+
+        (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
+
+            (key) => this.addEventListener(key, (params, cb) => {
+
+                this.reloadData();
+
+                cb();
+            })
+        );
+
+        if (!this.get('dataPreventInitialLoad')) {
+
+            this.reloadData();
+
+        }
+    }
+
+    done() {
+
+        this.isDone = true;
+
+        event.off(`#${this._id}`);
+
+        this.$ = null;
+    }
+
     render() {
 
         return this.constructor.TEMPLATE;
     }
+
+    ////////////////////////
+    //// Stateful
+    ///////////////////////
 
     get(_key) {
 
@@ -49,6 +85,7 @@ export default class BaseComponent {
 
         if (value === undefined) {
             const keys = _key.split('.');
+
             if (keys.length > 1) {
                 const key = keys.shift();
                 let rr = this.$[key] || this[key] || this.state[key];
@@ -71,23 +108,15 @@ export default class BaseComponent {
         return value;// TODO this.$[_key] =
     }
 
-    put(key, value) {
+    put(key, value, cb) {
 
         const state = this.state;
 
-        this.update({...state, [key]: value});
-    }
-
-    putEachVar(k, v) {
-
-        this.state[k] = v;
-
-        return 0;
-
+        this.update({...state, [key]: value}, cb);
     }
 
     setState(newState, cb) {
-        this.$ = {};
+        //this.$ = {};
         Object.assign(this, newState);
         cb && cb();
     }
@@ -113,88 +142,11 @@ export default class BaseComponent {
         });
     }
 
-    /**
-     * Lifecycle hooks
-     */
 
-    init() {
+    ////////////////////////
+    //// Data driven
+    ///////////////////////
 
-        (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
-            (key) => this.addEventListener(key, (params, cb) => {
-
-                this.reloadData();
-                cb();
-            })
-        );
-
-        if (!this.get('dataPreventInitialLoad')) {
-
-            this.reloadData();
-
-        }
-
-        //this.log('init', this);
-
-    }
-
-    done() {
-
-        this.isDone = true;
-
-        event.off(`#${this._id}`);
-    }
-
-    /**
-     * Gets display name of component.
-     */
-    _name() {
-
-        return this.name || this._id;
-    }
-
-    /**
-     * Gets string representation of component.
-     */
-    toString() {
-
-        return this._name();
-    }
-
-    typeName() {
-
-        const fn = this.constructor;
-
-        return fn.displayName || fn.name || ((/^function\s+([\w\$]+)\s*\(/.exec(fn.toString())||[])[1]||'C');
-    }
-
-    uniqueKey() {
-
-        return `C${COUNTER++}`;
-    }
-
-    /**
-     * Adds event handlers with this ownership.
-     *
-     * @param ev
-     */
-    addEventListener(key, handler) {
-
-        event.on(`${key}#${this._id}`, handler);
-    }
-
-    log(message, ...data) {
-
-        //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
-        console.log(this._name(), message, data)
-
-        return message;
-    }
-
-    event(...sources) {
-
-        return event(...sources);
-
-    }
 
     setData(data, extraState) {
 
@@ -202,7 +154,6 @@ export default class BaseComponent {
 
             this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
         }
-
     }
 
     hasData() {
@@ -250,4 +201,50 @@ export default class BaseComponent {
         return cb && cb.apply(this, args) || null;
     }
 
+    _name() {
+
+        return this.name || this._id;
+    }
+
+    typeName() {
+
+        return functionName( this.constructor);
+    }
+
+    uniqueKey() {
+
+        return `C${COUNTER++}`;
+    }
+
+
+    event(...sources) {
+
+        return event(...sources);
+    }
+
+    /**
+     * Adds event handlers with this ownership.
+     *
+     * @param ev
+     */
+    addEventListener(key, handler) {
+
+        event.on(`${key}#${this._id}`, handler);
+    }
+
+    log(message, ...data) {
+
+        //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
+        console.log(this._name(), message, ...data);
+
+        return message;
+    }
+
+    /**
+     * Gets string representation of component.
+     */
+    toString() {
+
+        return this._name();
+    }
 }

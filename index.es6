@@ -1,4 +1,5 @@
-export {default as BaseComponent} from './BaseComponent.es6';
+export {default as BaseComponent} from './Component.es6';
+export {default as Component} from './Component.es6';
 
 export {default as Dropdown} from './src/Dropdown.jsx';
 

@@ -1,8 +1,8 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
 import {Fieldset} from '../index.es6';
 
-export default class UiFormComponent extends BaseComponent {
+export default class UiFormComponent extends Component {
 
     render() {
 

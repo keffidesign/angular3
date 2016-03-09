@@ -1,32 +1,24 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
-export default class UiButtonComponent extends BaseComponent {
+export default class UiButton extends Component {
 
-    render() {
+    initialState(props) {
 
-        return (
-            <button
-                class='className'
-                onClick='clickHandler'
-            >
-                #[props.caption]
-            </button>
-        );
-
+        return {mode: 'main', ...props}
     }
 
-    getClassName() {
+    getTopClass() {
 
-        const mode = this.get('mode');
-
-        return `btn btn-sm${mode ? ` btn-${mode}`: ''}`
-
+        return `button button--${this.get('mode')} ${this.get('disabled') ? 'button--disabled':''}`;
     }
 
-    clickHandler(e) {
-
-        this.hook('onClick', e);
-
-    }
-
+    static TEMPLATE = (
+        <button
+            class=':topClass'
+            click=':onClick'
+        >
+            <i if=':icon' class=':fa fa-(:icon)'></i>
+            <block if=':caption'>:caption</block>
+        </button>
+    );
 }

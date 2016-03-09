@@ -1,4 +1,4 @@
-import BaseComponent from '../BaseComponent.es6';
+import Component from '../Component.es6';
 
 function addListeners(){
 
@@ -21,7 +21,7 @@ function addListeners(){
 /**
  * Page base class.
  */
-export default class Page extends BaseComponent {
+export default class Page extends Component {
 
     init() {
 
