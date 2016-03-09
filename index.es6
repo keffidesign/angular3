@@ -8,11 +8,11 @@ export {default as Checkbox} from './src/Checkbox.jsx';
 
 export {default as Table} from './src/Table.jsx';
 
-export {default as NavBar} from './src/NavBar.jsx';
+export {default as Header} from './src/Header.jsx';
 
 export {default as Footer} from './src/Footer.jsx';
 
-export {default as Article} from './src/Article.jsx';
+export {default as Content} from './src/Content.jsx';
 
 export {default as List} from './src/List.jsx';
 

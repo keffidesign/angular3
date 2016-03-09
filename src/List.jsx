@@ -6,8 +6,8 @@ export default class UiListComponent extends BaseComponent {
 
         return (
             <ul class='list-group' if='hasData'>
-                <li class='list-group-item' each='datum of data'>
-                    #[datumName]
+                <li class='list-group-item' each='datum of :data'>
+                    :datum.name
                 </li>
                 <else if='hasError'>
                     <span>Error occurred</span>
@@ -17,12 +17,6 @@ export default class UiListComponent extends BaseComponent {
                 </else>
             </ul>
         );
-
-    }
-
-    getDatumName() {
-
-        return this.get('datum.name');
 
     }
 

@@ -2,35 +2,31 @@ import BaseComponent from '../BaseComponent.es6';
 
 export default class UiDropdownComponent extends BaseComponent {
 
-    render() {
-
-        return (
-            <div if='hasData' class='dropdown'>
+    static TEMPLATE = (
+        <div if=':hasData' class='dropdown'>
+            <button
+                class='btn btn-secondary dropdown-toggle'
+                type='button'
+                id='dropdownMenu1'
+                data-toggle='dropdown'
+                aria-haspopup='true'
+                aria-expanded='false'
+            >
+                :caption
+            </button>
+            <div class='dropdown-menu' aria-labelledby='dropdownMenu1'>
                 <button
-                    class='btn btn-secondary dropdown-toggle'
-                    type='button'
-                    id='dropdownMenu1'
-                    data-toggle='dropdown'
-                    aria-haspopup='true'
-                    aria-expanded='false'
+                    click=':change'
+                    class="dropdown-item"
+                    type="button"
+                    data-value='datum.id'
+                    each='datum of :data'
                 >
-                    #[caption]
+                    :datum.name
                 </button>
-                <div class='dropdown-menu' aria-labelledby='dropdownMenu1'>
-                    <button
-                        onClick='changeHandler'
-                        class="dropdown-item"
-                        type="button"
-                        data-value='datum.id'
-                        each='datum of data'
-                    >
-                        #[datum.name]
-                    </button>
-                </div>
             </div>
-        );
-
-    }
+        </div>
+    );
 
     getCaption() {
 
@@ -38,13 +34,13 @@ export default class UiDropdownComponent extends BaseComponent {
 
         const data = this.get('data');
 
-        const current = data.filter(d => d.id === value).shift();
+        const current = data.find(d => d.id === value);
 
         return current && current.name || 'Dropdown';
 
     }
 
-    changeHandler(e) {
+    change(e) {
 
         const value = e.currentTarget.getAttribute('data-value');
 

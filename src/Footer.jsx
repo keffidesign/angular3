@@ -1,12 +1,12 @@
 import BaseComponent from '../BaseComponent.es6';
 
-export default class UiNavBarComponent extends BaseComponent {
+export default class UiFooterComponent extends BaseComponent {
 
     render() {
 
         return (
             <nav class='navbar navbar-fixed-bottom bg-inverse'>
-                <span class='text-xs-center'>#[caption]</span>
+                <span class='text-xs-center'>:caption</span>
             </nav>
         );
 
@@ -14,7 +14,7 @@ export default class UiNavBarComponent extends BaseComponent {
 
     getCaption() {
 
-        return this.get('caption') || 'Copyright (c) 2016 Brand';
+        return this.get('props.caption') || 'Copyright (c) 2016 Brand';
 
     }
 

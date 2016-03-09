@@ -9,28 +9,16 @@ export default class UiInputComponent extends BaseComponent {
                 <input
                     class='form-control'
                     type='text'
-                    value='value'
-                    placeholder='caption'
-                    onChange='changeHandler'
+                    value=':value'
+                    placeholder=':caption'
+                    change=':change'
                 />
             </div>
         );
 
     }
 
-    getValue() {
-
-        return this.get('value') || '';
-
-    }
-
-    getCaption() {
-
-        return this.get('caption') || '';
-
-    }
-
-    changeHandler(e) {
+    change(e) {
 
         const value = e && e.target.value;
 

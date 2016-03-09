@@ -9,19 +9,13 @@ export default class UiFormComponent extends BaseComponent {
         return (
             <form>
                 <Fieldset
-                    each='m of meta'
-                    meta='m'
-                    value='value'
-                    fieldValueChanged='fieldValueChanged'
+                    each='m of :meta'
+                    meta=':m'
+                    value=':value'
+                    fieldValueChanged=':change'
                  />
             </form>
         );
-    }
-
-    getMeta() {
-
-        return this.props.meta;
-
     }
 
     getValue() {
@@ -34,21 +28,13 @@ export default class UiFormComponent extends BaseComponent {
 
     }
 
-    fieldValueChanged(value, id) {
+    change(value, id) {
 
-        let data = this.get('data');
-
-        if (!data) {
-
-            data = {};
-
-            this.put('data', data);
-
-        }
+        const data = this.get('data') || {};
 
         data[id] = value;
 
-        this.hook('dataChanged', data);
+        this.put('data', data);
 
     }
 

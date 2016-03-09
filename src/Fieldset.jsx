@@ -15,22 +15,21 @@ export default class UiFieldsetComponent extends BaseComponent {
         return (
             <fieldset class="form-group">
                 <Input
-                    if='ifInput'
-                    testprop='propstest'
-                    caption='caption'
-                    valueChanged='valueChanged'
-                    value='value'
+                    if=':ifInput'
+                    caption=':caption'
+                    valueChanged=':change'
+                    value=':value'
                 />
                 <Checkbox
-                    if='ifBoolean'
-                    caption='caption'
-                    valueChanged='valueChanged'
+                    if=':ifBoolean'
+                    caption=':caption'
+                    valueChanged=':change'
                 />
                 <Dropdown
-                    if='ifEnumerable'
-                    dataFrom='dataFrom'
-                    caption='caption'
-                    valueChanged='valueChanged'
+                    if=':ifEnumerable'
+                    dataFrom=':dataFrom'
+                    caption=':caption'
+                    valueChanged=':change'
                 />
             </fieldset>
         );
@@ -63,19 +62,13 @@ export default class UiFieldsetComponent extends BaseComponent {
 
     }
 
-    getValue() {
-
-        return this.get('value') || '';
-
-    }
-
     getDataFrom() {
 
         return this.get('meta.dataFrom');
 
     }
 
-    valueChanged(value) {
+    change(value) {
 
         const id = this.get('meta.id');
 

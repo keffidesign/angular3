@@ -2,24 +2,20 @@ import BaseComponent from '../BaseComponent.es6';
 
 export default class UiTableComponent extends BaseComponent {
 
-    render() {
-
-        return (
-            <table class='table'>
-                <thead>
-                    <tr>
-                        <th each='column of columns'>#[column.caption]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr each='datum of data'>
-                        <td each='column of columns'>#[cellValue]</td>
-                    </tr>
-                </tbody>
-            </table>
-        );
-
-    }
+    static TEMPLATE = (
+        <table class='table'>
+            <thead>
+                <tr>
+                    <th each='column of :columns'>:column.caption</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr each='datum of :data'>
+                    <td each='column of :columns'>:cellValue</td>
+                </tr>
+            </tbody>
+        </table>
+    );
 
     getCellValue() {
 
