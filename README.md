@@ -15,16 +15,16 @@ Most important features are following:
 
 ## Example 
 
-in Component.es6
+in MyList.es6
 
 ```javascript
 import template from 'template.jsx';
 
-class Button extends BaseComponent {
+class MyList extends Component {
 
-    initialState(props) {
+    getDefaults() {
         
-        return { data:[ {id: 1, name: 'Item 1', tags:[{name:'some'}]}, ...props};
+        return { data:[ {id: 1, name: 'Item 1', tags:[{name:'some'}]}};
     }
     
     render(){
@@ -38,10 +38,6 @@ class Button extends BaseComponent {
     
     getHasData(){
         return !!this.getState('data')
-    }
-    
-    getHasError(){
-        return !!this.getState('error')
     }
 
 }

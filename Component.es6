@@ -1,5 +1,5 @@
 import {event} from 'applugins';
-import {functionName, capitalize} from './Utils.es6';
+import {functionName, capitalize, getter} from './utils.es6';
 
 let COUNTER = 0;
 
@@ -21,8 +21,8 @@ export default class Component {
 
     getDefaults() {
 
-        let t =this;
-        while(t){
+        let t = this;
+        while (t) {
             let r = t.constructor.DEFAULTS;
             if (r) {
                 return r;
@@ -58,48 +58,41 @@ export default class Component {
     //// Stateful
     ///////////////////////
 
-    get(_key) {
+    get(key) {
 
-        const fnKey = `get${capitalize(_key)}`;
+        let value = this[`get${capitalize(key)}`];
+        if (typeof value === 'function') {
 
-        const factory = this.state[fnKey] || this[fnKey];
+            return value.call(this);
+        }
 
-        let value = factory || this.$[_key] || this.state[_key] || this[_key];
+        value = this.$[key];
+        if (value !== undefined) {
 
-        //this.log('get0:',_key, value,  this);
+            return value;
+        }
+
+        value = this.state[key] || this[key];
+        if (value === undefined) {
+
+            value = getter.call(this.$, key);
+            if (value === undefined) {
+
+                value = this.getState(key);
+                if (value === undefined) {
+
+                    value = getter.call(this, key);
+                }
+            }
+
+        }
 
         if (typeof value === 'function') {
 
-            value = this.$[_key] || (this.$[_key] = value.bind(this));
-
-            if (factory) {
-                value = value();
-            }
+            value = this.$[key] = value.bind(this);
         }
 
-        if (value === undefined) {
-            const keys = _key.split('.');
-
-            if (keys.length > 1) {
-                const key = keys.shift();
-                let rr = this.$[key] || this[key] || this.state[key];
-
-                //this.log('get:',key, rr,  this);
-
-                if (rr) {
-                    for (let k of keys) {
-                        value = rr[k];
-                        // console.log('key', key, rr, keys, k , value);
-                        if (!value) {
-                            break;
-                        }
-                        rr = value;
-                    }
-                }
-            }
-        }
-
-        return value;// TODO this.$[_key] =
+        return value;
     }
 
     put(key, value, cb) {
@@ -109,9 +102,15 @@ export default class Component {
         this.update({...state, [key]: value}, cb);
     }
 
+    getState(key) {
+
+        return getter.call(this.state, key);
+    }
+
     setState(newState, cb) {
         //this.$ = {};
         Object.assign(this.state, newState);
+
         cb && cb();
     }
 
@@ -145,7 +144,7 @@ export default class Component {
 
     hook(key, ...args) {
 
-        const cb = this.get(key) || this[key];
+        const cb = this.get(key);
 
         return cb && cb.apply(this, args) || null;
     }
