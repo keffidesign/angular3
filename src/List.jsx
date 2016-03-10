@@ -1,29 +1,21 @@
-import Component from '../Component.es6';
+import DataComponent from '../DataComponent.es6';
 
-export default class UiListComponent extends Component {
+export default class UiList extends DataComponent {
+    static DEFAULTS = {
+        emptyMessage:'Empty'
+    };
 
-    render() {
-
-        return (
-            <ul class='list-group' if='hasData'>
-                <li class='list-group-item' each='datum of :data'>
-                    :datum.name
-                </li>
-                <else if='hasError'>
-                    <span>Error occurred</span>
-                    <else>
-                        <span>There is no data</span>
-                    </else>
+    static TEMPLATE = (
+        <ul class='list-group' if=':data'>
+            <li class='list-group-item' each='datum of :data' click=":itemClick">
+                :datum.name
+            </li>
+            <else if=':error'>
+                <span>:Error: :error.message</span>
+                <else>
+                    <span>:emptyMessage</span>
                 </else>
-            </ul>
-        );
-
-    }
-
-    hasError() {
-
-        return this.get('error') != undefined;
-
-    }
-
+            </else>
+        </ul>
+    )
 }

@@ -8,7 +8,7 @@ const BOOLEAN_TYPE = 'boolean';
 
 const ENUMERABLE_TYPE = 'enum';
 
-export default class UiFieldsetComponent extends Component {
+export default class UiFieldset extends Component {
 
     render() {
 

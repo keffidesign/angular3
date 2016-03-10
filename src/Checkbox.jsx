@@ -2,19 +2,15 @@ import Component from '../Component.es6';
 
 export default class UiCheckboxComponent extends Component {
 
-    render() {
-
-        return (
-            <div class='form-group'>
-                <input
-                    type='checkbox'
-                    chage=':change'
-                />
-                <span class='form-group-addon' id='basic-addon3'>:caption</span>
-            </div>
-        );
-
-    }
+    static TEMPLATE = (
+        <div class='form-group'>
+            <input
+                type='checkbox'
+                chage=':change'
+            />
+            <span class='form-group-addon' id='basic-addon3'>:caption</span>
+        </div>
+    );
 
     change(e) {
 

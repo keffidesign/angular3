@@ -45,9 +45,8 @@ export default class Page extends Component {
         return this.getRoutingParam('document');
     }
 
-    navigate(path, mode) {
+    navigate(path, params) {
 
-        return this.event(`ui://navigate/${path}?mode=${mode}`).action();
+        return this.event(`ui://navigate/${path}`,{params}).action();
     }
-
 }

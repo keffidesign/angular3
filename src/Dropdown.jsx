@@ -1,6 +1,6 @@
-import Component from '../Component.es6';
+import DataComponent from '../DataComponent.es6';
 
-export default class UiDropdownComponent extends Component {
+export default class UiDropdownComponent extends DataComponent {
 
     static TEMPLATE = (
         <div if=':hasData' class='dropdown'>

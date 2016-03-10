@@ -1,5 +1,4 @@
 import {event} from 'applugins';
-
 import {functionName, capitalize} from './Utils.es6';
 
 let COUNTER = 0;
@@ -15,14 +14,22 @@ export default class Component {
         this.internalConstructor(...opts);
     }
 
-    internalConstructor() {
+    internalConstructor(opts) {
 
-        this.state = {...this.initialState(), ...this.props};
+        this.state = {...this.getDefaults(), ...this.props};
     }
 
-    initialState() {
+    getDefaults() {
 
-        return this.constructor.INITIAL_STATE || {};
+        let t =this;
+        while(t){
+            let r = t.constructor.DEFAULTS;
+            if (r) {
+                return r;
+            }
+            t = t.__proto__;
+        }
+        return {};
     }
 
     ////////////////////////
@@ -31,21 +38,6 @@ export default class Component {
 
     init() {
 
-        (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
-
-            (key) => this.addEventListener(key, (params, cb) => {
-
-                this.reloadData();
-
-                cb();
-            })
-        );
-
-        if (!this.get('dataPreventInitialLoad')) {
-
-            this.reloadData();
-
-        }
     }
 
     done() {
@@ -73,6 +65,8 @@ export default class Component {
         const factory = this.state[fnKey] || this[fnKey];
 
         let value = factory || this.$[_key] || this.state[_key] || this[_key];
+
+        //this.log('get0:',_key, value,  this);
 
         if (typeof value === 'function') {
 
@@ -123,71 +117,26 @@ export default class Component {
 
     update(newState, cb) {
 
-        const prevState = this.state;
+        if (newState) {
 
-        const changedKeys = Object.keys(newState).filter(key=>(prevState[key] !== newState[key]));
+            const prevState = this.state;
 
-        this.setState(newState, (err)=> {
+            const changedKeys = Object.keys(newState).filter(key=>(prevState[key] !== newState[key]));
 
-            //console.log('changes', newState, prevState, Object.keys(newState));
+            this.setState(newState, (err)=> {
 
-            for (let key of changedKeys) {
+                //console.log('changes', newState, prevState, Object.keys(newState));
 
-                //console.log('changes', key, newState[key]);
+                for (let key of changedKeys) {
 
-                this.hook(`${key}Changed`, newState[key]);
-            }
+                    //console.log('changes', key, newState[key]);
 
-            cb && cb();
-        });
-    }
+                    this.hook(`${key}Changed`, newState[key]);
+                }
 
-
-    ////////////////////////
-    //// Data driven
-    ///////////////////////
-
-
-    setData(data, extraState) {
-
-        if (!this.isDone) {
-
-            this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
+                cb && cb();
+            });
         }
-    }
-
-    hasData() {
-
-        return this.get('data') != undefined;
-    }
-
-    reloadData(key = this.get('dataFrom'), payload = this.get('dataFromPayload') || {}) {
-
-        if (key) {
-
-            const dataLoading = this.uniqueKey();
-
-            this.setState({data: null, error: null, dataLoading}, () => this.loadData(key, payload, dataLoading));
-        }
-    }
-
-    loadData(key, payload, dataLoading) {
-
-        this.event(key).withData(payload).action((error, data) => {
-
-            //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
-
-            // !!! only the last  sent emit is able to be applied.
-
-            if (dataLoading === this.get('dataLoading')) {
-
-                //this.log('data loaded', error, data);
-
-                this.setData(data, {error, dataLoading: false});
-
-            }
-
-        });
     }
 
     ////////////////////////
@@ -208,7 +157,7 @@ export default class Component {
 
     typeName() {
 
-        return functionName( this.constructor);
+        return functionName(this.constructor);
     }
 
     uniqueKey() {

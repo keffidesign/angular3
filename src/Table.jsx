@@ -1,17 +1,18 @@
-import Component from '../Component.es6';
+import DataComponent from '../DataComponent.es6';
 
-export default class UiTableComponent extends Component {
+export default class UiTable extends DataComponent {
 
     static TEMPLATE = (
+
         <table class='table'>
             <thead>
                 <tr>
-                    <th each='column of :columns'>:column.caption</th>
+                    <th each='column of :meta'>:column.caption</th>
                 </tr>
             </thead>
             <tbody>
                 <tr each='datum of :data'>
-                    <td each='column of :columns'>:cellValue</td>
+                    <td each='column of :meta'>:cellValue</td>
                 </tr>
             </tbody>
         </table>
@@ -19,16 +20,8 @@ export default class UiTableComponent extends Component {
 
     getCellValue() {
 
-        const index = this.get('column.id');
+        const key = this.get('column.id');
 
-        return this.get('datum')[index];
-
+        return this.get(`datum.${key}`);
     }
-
-    getColumns() {
-
-        return this.get('meta');
-
-    }
-
 }
