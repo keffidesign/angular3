@@ -61,38 +61,28 @@ export default class Component {
     get(key) {
 
         let value = this[`get${capitalize(key)}`];
-        if (typeof value === 'function') {
+        if (value !== undefined) {
 
             return value.call(this);
         }
 
         value = this.$[key];
         if (value !== undefined) {
+            return value;
+        }
+
+        value = this[key];
+        if (value !== undefined) {
+
+            if (typeof value === 'function') {
+
+                value = this.$[key] = value.bind(this);
+            }
 
             return value;
         }
 
-        value = this.state[key] || this[key];
-        if (value === undefined) {
-
-            value = getter.call(this.$, key);
-            if (value === undefined) {
-
-                value = this.getState(key);
-                if (value === undefined) {
-
-                    value = getter.call(this, key);
-                }
-            }
-
-        }
-
-        if (typeof value === 'function') {
-
-            value = this.$[key] = value.bind(this);
-        }
-
-        return value;
+        return this.getState(key);
     }
 
     put(key, value, cb) {
@@ -142,16 +132,9 @@ export default class Component {
     //// Routines
     ///////////////////////
 
-    hook(key, ...args) {
+    name() {
 
-        const cb = this.get(key);
-
-        return cb && cb.apply(this, args) || null;
-    }
-
-    _name() {
-
-        return this.name || this._id;
+        return this._name || this._id;
     }
 
     typeName() {
@@ -164,6 +147,12 @@ export default class Component {
         return `C${COUNTER++}`;
     }
 
+    hook(key, ...args) {
+
+        const cb = this.get(key);
+
+        return cb && cb.apply(this, args) || null;
+    }
 
     event(...sources) {
 
@@ -183,7 +172,7 @@ export default class Component {
     log(message, ...data) {
 
         //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
-        console.log(this._name(), message, ...data);
+        console.log(this.name(), message, ...data);
 
         return message;
     }

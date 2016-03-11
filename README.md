@@ -1,17 +1,19 @@
 # Reangulact
 
-This is an experimental library that allows to design UI components in pure JS6/JSX non-obtrusive way.
+This is an experimental libraryin pure JS6/JSX that allows to design UI components most abstract non-obtrusive way.
 
-It is about to get the best from React and Angular2 and can be run over both of them, but not aware of any underlying UI framework or library based on.
+We intended to keep on declarative side providing functional reactive approach.
 
-> To make things as abstract as possible, keep on declarative side.
+We have got the best from React and Angular2: it can be run over both of them, staying agnostic of underlying UI framework or library based on.
 
 ## Features
 
-Most important features are following:
- - reactive functional state-driven approach.
+Most important features:
  - static JSX template with `if/each` directives and `:key` placeholders.
- - `init()`, `initialSate()`, `done()` life-cycle hooks.
+ - `init()`, `render()`, `done()` life-cycle hooks.
+ - getters
+ - pipes
+ - data-driven component
 
 ## Example 
 
@@ -54,7 +56,7 @@ in template.jsx
         <li each='datum of :data'>
             <p>:datum.name</p>
             <ul>
-                <li each='tag of :datum.tags'>: tag: (:tag.name) datum: (:datum.name)</li>
+                <li each='tag of :datum.tags'>: tag (:tag.name) of datum (:datum.name)</li>
             </ul>
         </li>
         <else if=':hasError'>

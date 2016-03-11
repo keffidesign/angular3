@@ -19,7 +19,6 @@ export default class DataComponent extends Component {
         if (!this.get('dataPreventInitialLoad')) {
 
             this.reloadData();
-
         }
     }
 
