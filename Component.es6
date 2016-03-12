@@ -39,6 +39,8 @@ export default class Component {
         event.off(`#${this._id}`);
 
         this.$ = null;
+
+        this.state = null;
     }
 
     render() {
