@@ -24,23 +24,11 @@ import template from 'template.jsx';
 
 class MyList extends Component {
 
-    getDefaults() {
-        
-        return { data:[ {id: 1, name: 'Item 1', tags:[{name:'some'}]}};
+    static DEFAULTS = {
+       data: [ { id: 1, name: 'Item 1', tags: [ { name: 'some' } ] } ]
     }
-    
-    render(){
-    
-        return template;
-    }
-    
-    getCaption(){
-        return this.getState('caption') || 'Apply'
-    }
-    
-    getHasData(){
-        return !!this.getState('data')
-    }
+
+    static TEMPLATE = template;
 
 }
 
@@ -52,14 +40,14 @@ in template.jsx
 <div>
     <h1>:caption</h1>
 
-    <ul if=":hasData">
+    <ul if=':data'>
         <li each='datum of :data'>
-            <p>:datum.name</p>
+            <h2>:datum.name</h2>
             <ul>
                 <li each='tag of :datum.tags'>: tag (:tag.name) of datum (:datum.name)</li>
             </ul>
         </li>
-        <else if=':hasError'>
+        <else if=':error'>
             <span>:Error: (:error.message)</span>
             <else>
                 <span>No data</span>
@@ -67,6 +55,6 @@ in template.jsx
         </else>
     </ul>
     
-    <ui.Button caption=":(Apply  :caption)"/>
+    <ui.Button caption=':(Apply  :caption)'/>
 </div>
 ```
