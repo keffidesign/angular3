@@ -1,10 +1,10 @@
 # Reangulact
 
-This is an experimental libraryin pure JS6/JSX that allows to design UI components most abstract non-obtrusive way.
+This is an experimental library in pure JS6/JSX that allows to design UI components most abstract non-obtrusive way.
 
-We intended to keep on declarative side providing functional reactive approach.
+We intended to be _actually_ declarative reactive functional oriented.
 
-We have got the best from React and Angular2: it can be run over both of them, staying agnostic of underlying UI framework or library based on.
+We have got the best from React and Angular2: it can use either, staying agnostic about underlying engine.
 
 ## Features
 

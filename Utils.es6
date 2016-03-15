@@ -38,3 +38,13 @@ export function getter(key) {
 
     return value;
 }
+export function getStatic(t, key) {
+    while (t) {
+        let r = t.constructor[key];
+        if (r) {
+            return r;
+        }
+        t = t.__proto__;
+    }
+    return null;
+}

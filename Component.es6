@@ -1,5 +1,5 @@
 import {event} from 'applugins';
-import {functionName, capitalize, getter} from './utils.es6';
+import {functionName, capitalize, getter, getStatic} from './utils.es6';
 import {Pipes} from './Pipes.es6';
 
 let COUNTER = 0;
@@ -24,15 +24,7 @@ export default class Component {
 
     getDefaults() {
 
-        let t = this;
-        while (t) {
-            let r = t.constructor.DEFAULTS;
-            if (r) {
-                return r;
-            }
-            t = t.__proto__;
-        }
-        return {};
+        return getStatic(this, 'DEFAULTS') || {};
     }
 
     ////////////////////////
@@ -50,11 +42,13 @@ export default class Component {
         event.off(`#${this._id}`);
 
         this.$ = null;
+
+        this.state = null;
     }
 
     render() {
 
-        return this.constructor.TEMPLATE;
+        return getStatic(this, 'TEMPLATE');
     }
 
     ////////////////////////
@@ -63,17 +57,20 @@ export default class Component {
 
     get(key) {
 
+        // 1. Getter
         let value = this[`get${capitalize(key)}`];
         if (value !== undefined) {
 
             return value.call(this);
         }
 
+        // 2. pre-cached
         value = this.$[key];
         if (value !== undefined) {
             return value;
         }
 
+        // 3. own property
         value = this[key];
         if (value !== undefined) {
 
@@ -85,6 +82,7 @@ export default class Component {
             return value;
         }
 
+        // 4. from state
         return this.getState(key);
     }
 
