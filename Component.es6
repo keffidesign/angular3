@@ -1,5 +1,6 @@
 import {event} from 'applugins';
 import {functionName, capitalize, getter} from './utils.es6';
+import {Pipes} from './Pipes.es6';
 
 let COUNTER = 0;
 
@@ -10,6 +11,8 @@ export default class Component {
         this._id = this.typeName() + (++COUNTER);
 
         this.$ = {}; // memoization cache
+
+        this.registerPipes();
 
         this.internalConstructor(...opts);
     }
@@ -167,6 +170,23 @@ export default class Component {
     addEventListener(key, handler) {
 
         event.on(`${key}#${this._id}`, handler);
+    }
+
+    registerPipes() {
+
+        if (!this.pipes) this.pipes = new Map();
+
+        Object
+            .getOwnPropertyNames(this.__proto__)
+            .filter(p => p.endsWith('Pipe'))
+            .map(p => this.pipes.set(p.slice(0, -4), this[p]));
+
+    }
+
+    transform(value, pipes) {
+
+        return pipes.reduce((v, p) => this.pipes.has(p) ? this.pipes.get(p)(v) : Pipes.transform(v, p), value);
+
     }
 
     log(message, ...data) {
