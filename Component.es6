@@ -93,28 +93,22 @@ export default class Component {
             return value;
         }
 
-        // automatic setter from tag[data-value] into state
-        if (key.startsWith('set')){
-            return this.$[key] = ((ev)=>{this.put(key[3].toLowerCase()+key.slice(4), ev.currentTarget.dataset.value)})
-        }
-        return this.getState(key);
+        return undefined;
     }
 
     put(key, value, cb) {
-
-        const state = this.state;
 
         this.update({[key]: value}, cb);
     }
 
     getState(key) {
 
-        return getter.call(this.state, key);
+        return this.state && getter.call(this.state, key);
     }
 
     setState(newState, cb) {
 
-        this.state = Object.assign({}, this.state, newState);
+        this.state = {...this.state, ...newState};
 
         cb && cb();
     }
@@ -210,6 +204,13 @@ export default class Component {
 
     }
 
+    getClicker(key) {
+
+        const fn = this.get(key) || (a=>this.log(`No click handler ${key}`));
+
+        return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
+    }
+
     log(message, ...data) {
 
         //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
@@ -223,6 +224,6 @@ export default class Component {
      */
     toString() {
 
-        return this._name();
+        return this.name();
     }
 }

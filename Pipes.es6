@@ -1,21 +1,18 @@
-class PipesHub {
+const ALL = new Map();
 
-    static HUB = new Map();
+export const Pipes = {
 
     register(key, pipeFn) {
 
-        PipesHub.HUB.set(key, pipeFn);
+        ALL.set(key, pipeFn);
+    },
 
+    transform(value, pipeId) {
+
+        const pipe = ALL.get(pipeId);
+
+        return pipe? pipe(value): value;
     }
+};
 
-    transform(value, pipe) {
-
-        return PipesHub.HUB.get(pipe)(value);
-
-    }
-
-}
-
-export const Pipes = new PipesHub();
-
-Pipes.register('uppercase', (value) => value.toUpperCase());
+Pipes.register('upper', (value) => value.toUpperCase());
