@@ -1,4 +1,4 @@
-import {event} from 'applugins';
+import event from 'evest';
 import {functionName, capitalize, getter, getStatic} from './utils.es6';
 import {Pipes} from './Pipes.es6';
 
@@ -17,14 +17,19 @@ export default class Component {
         this.internalConstructor(...opts);
     }
 
-    internalConstructor(opts) {
-
-        this.state = {...this.getDefaults(), ...this.props};
+    internalConstructor() {
     }
 
-    getDefaults() {
+    getDefaults(extra) {
 
-        return getStatic(this, 'DEFAULTS') || {};
+        const extraInitials = (extra) && Object.keys(extra).reduce((r, k)=> {
+                if (k.startsWith('initial')) {
+                    r[k[7].toLowerCase() + k.slice(8)] = extra[k]
+                }
+                return r;
+            }, {});
+
+        return {...getStatic(this, 'DEFAULTS'), ...extra, ...extraInitials};
     }
 
     ////////////////////////
@@ -83,6 +88,15 @@ export default class Component {
         }
 
         // 4. from state
+        value = this.getState(key);
+        if (value !== undefined) {
+            return value;
+        }
+
+        // automatic setter from tag[data-value] into state
+        if (key.startsWith('set')){
+            return this.$[key] = ((ev)=>{this.put(key[3].toLowerCase()+key.slice(4), ev.currentTarget.dataset.value)})
+        }
         return this.getState(key);
     }
 
@@ -90,7 +104,7 @@ export default class Component {
 
         const state = this.state;
 
-        this.update({...state, [key]: value}, cb);
+        this.update({[key]: value}, cb);
     }
 
     getState(key) {
@@ -99,33 +113,42 @@ export default class Component {
     }
 
     setState(newState, cb) {
-        //this.$ = {};
-        Object.assign(this.state, newState);
+
+        this.state = Object.assign({}, this.state, newState);
 
         cb && cb();
     }
 
-    update(newState, cb) {
+    update(delta, cb) {
 
-        if (newState) {
+        if (delta) {
 
             const prevState = this.state;
 
-            const changedKeys = Object.keys(newState).filter(key=>(prevState[key] !== newState[key]));
+            const changedKeys = prevState
+                ? Object.keys(delta).filter(key=>(prevState[key] !== delta[key]))
+                : Object.keys(delta);
 
-            this.setState(newState, (err)=> {
+            if (changedKeys.length){
 
-                //console.log('changes', newState, prevState, Object.keys(newState));
+                this.setState(delta, (err)=> {
 
-                for (let key of changedKeys) {
+                    //console.log('changes', newState, prevState, Object.keys(newState));
 
-                    //console.log('changes', key, newState[key]);
+                    for (let key of changedKeys) {
 
-                    this.hook(`${key}Changed`, newState[key]);
-                }
+                        //console.log('changes', key, newState[key]);
 
+                        this.hook(`${key}Changed`, delta[key]);
+                    }
+
+                    cb && cb();
+                });
+
+            } else {
                 cb && cb();
-            });
+            }
+
         }
     }
 
