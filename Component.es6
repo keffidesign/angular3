@@ -62,32 +62,30 @@ export default class Component {
 
     get(key) {
 
-        // 1. Getter
-        let value = this[`get${capitalize(key)}`];
-        if (value !== undefined) {
-
-            return value.call(this);
-        }
-
-        // 2. pre-cached
-        value = this.$[key];
+        // 1. pre-cached
+        let value = this.$[key];
         if (value !== undefined) {
             return value;
         }
 
-        // 3. own property
+        // 2. own property
         value = this[key];
         if (value !== undefined) {
 
             if (typeof value === 'function') {
 
-                value = this.$[key] = value.bind(this);
+                value = value.call(this);
+
+                if (typeof value === 'function') {
+
+                    value = this.$[key] = value.bind(this);
+                }
             }
 
             return value;
         }
 
-        // 4. from state
+        // 3. from state
         value = this.getState(key);
         if (value !== undefined) {
             return value;
@@ -128,11 +126,11 @@ export default class Component {
                 ? Object.keys(delta).filter(key=>(prevState[key] !== delta[key]))
                 : Object.keys(delta);
 
-            if (changedKeys.length){
+            if (changedKeys.length) {
 
                 this.setState(delta, (err)=> {
 
-                    //console.log('changes', newState, prevState, Object.keys(newState));
+                    console.log('changes', delta, prevState);
 
                     for (let key of changedKeys) {
 
@@ -182,6 +180,14 @@ export default class Component {
         return event(...sources);
     }
 
+    action(ev, cb){
+
+        if (cb) {
+            this.event(ev).action(cb)
+        } else {
+            return this.event(ev).promiseAction()
+        }
+    }
     /**
      * Adds event handlers with this ownership.
      *
@@ -200,7 +206,6 @@ export default class Component {
             .getOwnPropertyNames(this.__proto__)
             .filter(p => p.endsWith('Pipe'))
             .map(p => this.pipes.set(p.slice(0, -4), this[p]));
-
     }
 
     transform(value, pipes) {
@@ -209,14 +214,23 @@ export default class Component {
 
     }
 
-    updateOnClick(ev) {
+    updateOnClick() {
 
-        this.update({...ev.currentTarget.dataset});
+        return (ev)=>{
+            this.update({...ev.currentTarget.dataset});
+        }
+
     }
 
     getClicker(key) {
 
-        let fn = this.get(key) || (ev=>{this.log(`No click handler ${key}`)})
+        let fn = this.$[key];
+
+        if (fn) return fn;
+
+        fn = this.get(key) || (ev=> {
+                this.log(`No click handler ${key}`)
+            })
 
         return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
     }
