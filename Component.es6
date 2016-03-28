@@ -96,6 +96,11 @@ export default class Component {
         return undefined;
     }
 
+    set(key, value, cb) {
+
+        this.update({[key]: value}, cb);
+    }
+
     put(key, value, cb) {
 
         this.update({[key]: value}, cb);
@@ -204,9 +209,14 @@ export default class Component {
 
     }
 
+    updateOnClick(ev) {
+
+        this.update({...ev.currentTarget.dataset});
+    }
+
     getClicker(key) {
 
-        const fn = this.get(key) || (a=>this.log(`No click handler ${key}`));
+        let fn = this.get(key) || (ev=>{this.log(`No click handler ${key}`)})
 
         return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
     }
