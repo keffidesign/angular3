@@ -59,7 +59,7 @@ export default class DataComponent extends Component {
 
             if (dataLoading === this.get('dataLoading')) {
 
-                //this.log('data loaded', error, data);
+                this.log('data loaded',key, error, data);
 
                 this.setData(data, {error, dataLoading: false});
 
