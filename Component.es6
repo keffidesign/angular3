@@ -132,7 +132,7 @@ export default class Component {
 
                 this.setState(delta, (err)=> {
 
-                    //console.log('changes', newState, prevState, Object.keys(newState));
+                    this.log('changes',changedKeys, delta, prevState);
 
                     for (let key of changedKeys) {
 
@@ -207,6 +207,11 @@ export default class Component {
 
         return pipes.reduce((v, p) => this.pipes.has(p) ? this.pipes.get(p)(v) : Pipes.transform(v, p), value);
 
+    }
+
+    getRouteParams() {
+
+        return this.getState('params')||{};
     }
 
     updateOnClick(ev) {

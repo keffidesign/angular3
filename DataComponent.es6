@@ -30,7 +30,7 @@ export default class DataComponent extends Component {
 
         if (!this.isDone) {
 
-            this.setState({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
+            this.update({data, ...extraState, dataChangedCounter: (this.get('dataChangedCounter') || 0) + 1});
         }
     }
 
@@ -59,7 +59,7 @@ export default class DataComponent extends Component {
 
             if (dataLoading === this.get('dataLoading')) {
 
-                this.log('data loaded',key, error, data);
+                this.log('data loaded',key, error, data, this);
 
                 this.setData(data, {error, dataLoading: false});
 
