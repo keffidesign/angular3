@@ -177,18 +177,9 @@ export default class Component {
         return cb && cb.apply(this, args) || null;
     }
 
-    event(...sources) {
+    event(source) {
 
-        return event(...sources);
-    }
-
-    action(ev, cb){
-
-        if (cb===undefined) {
-            return this.event(ev).promiseAction()
-        } else {
-            this.event(ev).action(cb)
-        }
+        return event(source);
     }
 
     /**
