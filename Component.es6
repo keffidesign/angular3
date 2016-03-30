@@ -4,22 +4,33 @@ import {Pipes} from './Pipes.es6';
 
 let COUNTER = 0;
 
+/**
+ * The base component ancestor.
+ */
 export default class Component {
 
     constructor(...opts) {
 
+        // unique identity
         this._id = this.typeName() + (++COUNTER);
 
-        this.$ = {}; // memoization cache
+        // memoization cache
+        this.$ = {};
 
         this.registerPipes();
 
         this.internalConstructor(...opts);
     }
 
+    /**
+     * Used by platform adapter to extend constructor logic
+     */
     internalConstructor() {
     }
 
+    /**
+     * Produces initial state
+     */
     getDefaults(extra) {
 
         const extraInitials = (extra) && Object.keys(extra).reduce((r, k)=> {
@@ -151,31 +162,23 @@ export default class Component {
         }
     }
 
-    ////////////////////////
-    //// Routines
-    ///////////////////////
-
-    name() {
-
-        return this._name || this._id;
-    }
-
-    typeName() {
-
-        return functionName(this.constructor);
-    }
-
-    uniqueKey() {
-
-        return `C${COUNTER++}`;
-    }
-
     hook(key, ...args) {
 
         const cb = this.get(key);
 
         return cb && cb.apply(this, args) || null;
     }
+
+    getClicker(key) {
+
+        let fn = this.get(key) || (ev=>{this.log(`No click handler ${key}`)})
+
+        return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
+    }
+
+    ////////////////////////
+    //// Events
+    ///////////////////////
 
     event(source) {
 
@@ -191,6 +194,10 @@ export default class Component {
 
         event.on(`${key}#${this._id}`, handler);
     }
+
+    ////////////////////////
+    //// Routines
+    ///////////////////////
 
     registerPipes() {
 
@@ -219,19 +226,31 @@ export default class Component {
         this.update({...ev.currentTarget.dataset});
     }
 
-    getClicker(key) {
-
-        let fn = this.get(key) || (ev=>{this.log(`No click handler ${key}`)})
-
-        return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
-    }
-
     log(message, ...data) {
 
         //return event(`log://info`, {value: `${this}: ${message}`, data}).action();
         console.log(this.name(), message, ...data);
 
         return message;
+    }
+
+    ////////////////////////
+    //// Attribution
+    ///////////////////////
+
+    name() {
+
+        return this._name || this._id;
+    }
+
+    typeName() {
+
+        return functionName(this.constructor);
+    }
+
+    uniqueKey() {
+
+        return `C${COUNTER++}`;
     }
 
     /**
