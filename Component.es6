@@ -1,6 +1,6 @@
-import event from 'evest';
 import {functionName, capitalize, getter, getStatic} from './utils.es6';
 import {Pipes} from './Pipes.es6';
+import event from 'evest';
 
 let COUNTER = 0;
 
@@ -55,6 +55,8 @@ export default class Component {
 
         this.isDone = true;
 
+        this.removeAllEventListeners();
+
         this.$ = null;
 
         this.state = null;
@@ -64,7 +66,29 @@ export default class Component {
 
         return getStatic(this, 'TEMPLATE');
     }
+    ////////////////////////
+    //// Events
+    ///////////////////////
 
+    event(source) {
+
+        return event(source);
+    }
+
+    /**
+     * Adds event handlers with this ownership.
+     *
+     * @param ev
+     */
+    addEventListener(key, handler) {
+
+        event.on(`${key}#${this._id}`, handler);
+    }
+
+    removeAllEventListeners() {
+
+        event.off(`#${this._id}`);
+    }
     ////////////////////////
     //// Stateful
     ///////////////////////
