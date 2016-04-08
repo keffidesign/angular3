@@ -22,6 +22,35 @@ export default class DataComponent extends Component {
         }
     }
 
+    done() {
+
+        this.removeAllEventListeners();
+
+        super.done();
+    }
+    ////////////////////////
+    //// Events
+    ///////////////////////
+
+    event(source) {
+
+        return event(source);
+    }
+
+    /**
+     * Adds event handlers with this ownership.
+     *
+     * @param ev
+     */
+    addEventListener(key, handler) {
+
+        event.on(`${key}#${this._id}`, handler);
+    }
+
+    removeAllEventListeners() {
+
+        event.off(`#${this._id}`);
+    }
     ////////////////////////
     //// Data driven
     ///////////////////////

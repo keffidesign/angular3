@@ -55,8 +55,6 @@ export default class Component {
 
         this.isDone = true;
 
-        event.off(`#${this._id}`);
-
         this.$ = null;
 
         this.state = null;
@@ -176,24 +174,7 @@ export default class Component {
         return this.$[key] || (this.$[key] = (ev=>fn(ev, ev.currentTarget.dataset)));
     }
 
-    ////////////////////////
-    //// Events
-    ///////////////////////
 
-    event(source) {
-
-        return event(source);
-    }
-
-    /**
-     * Adds event handlers with this ownership.
-     *
-     * @param ev
-     */
-    addEventListener(key, handler) {
-
-        event.on(`${key}#${this._id}`, handler);
-    }
 
     ////////////////////////
     //// Routines
