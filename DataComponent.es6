@@ -7,7 +7,6 @@ export default class DataComponent extends Component {
         super.init();
 
         (this.get('dataDependsOn') || '').split(';').map(e => e.trim()).filter(e => e).forEach(
-
             (key) => this.addEventListener(key, (params, cb) => {
 
                 this.reloadData();
@@ -46,27 +45,25 @@ export default class DataComponent extends Component {
 
             const dataLoading = this.uniqueKey();
 
-            this.setState({data: null, error: null, dataLoading}, () => this.loadData(key, payload, dataLoading));
+            this.setState({data: null, error: null, dataLoading}, () => {
+
+                this.event([key, {data: payload}]).action((error, data) => {
+
+                    //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
+
+                    // !!! only the last  sent emit is able to be applied.
+
+                    if (dataLoading === this.get('dataLoading')) {
+
+                        this.log('data loaded', key, error, data, this);
+
+                        this.setData(data, {error, dataLoading: false});
+
+                    }
+                });
+
+            });
         }
-    }
-
-    loadData(key, payload, dataLoading) {
-
-        this.event(key).withData(payload).action((error, data) => {
-
-            //this.log('data loaded', error, data, dataLoading, this.state.dataLoading);
-
-            // !!! only the last  sent emit is able to be applied.
-
-            if (dataLoading === this.get('dataLoading')) {
-
-                this.log('data loaded',key, error, data, this);
-
-                this.setData(data, {error, dataLoading: false});
-
-            }
-
-        });
     }
 
 }

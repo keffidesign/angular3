@@ -75,6 +75,17 @@ export default class Component {
         return event(source);
     }
 
+
+    emit(source, cb) {
+
+        return this.event(source).emit(cb);
+    }
+
+    action(source, cb) {
+
+        return this.event(source).action(cb);
+    }
+
     /**
      * Adds event handlers with this ownership.
      *
