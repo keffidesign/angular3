@@ -199,7 +199,15 @@ export default class Component {
 
         const cb = this.get(key);
 
-        return cb && cb.apply(this, args) || null;
+        try{
+
+            return cb && cb.apply(this, args) || null;
+
+        } catch(ex){
+
+            this.error(ex);
+        }
+
     }
 
     getClicker(key) {
