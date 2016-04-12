@@ -205,7 +205,7 @@ export default class Component {
 
         } catch(ex){
 
-            this.error(ex);
+            this.logError(`Error in ${key} hook`, ex);
         }
 
     }
@@ -257,7 +257,12 @@ export default class Component {
 
         return message;
     }
+    logError(message, ...data) {
 
+        console.error(`${this.name()}: ${message}`, ...data);
+
+        return message;
+    }
     ////////////////////////
     //// Attribution
     ///////////////////////
