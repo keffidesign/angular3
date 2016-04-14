@@ -87,6 +87,7 @@ in template.jsx
     <ui.Button caption=':(Apply  :caption)'/>
 </div>
 ```
+```jsx
 /**
  * Angular2
  * 6 Lines
@@ -132,3 +133,4 @@ in template.jsx
         <TreeView if=':dir.expanded' directories=':dir.directories'/>
     </li>
 </ul>
+```
