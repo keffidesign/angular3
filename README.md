@@ -87,3 +87,48 @@ in template.jsx
     <ui.Button caption=':(Apply  :caption)'/>
 </div>
 ```
+/**
+ * Angular2
+ * 6 Lines
+ * 200 Symbols
+ */
+<ul>
+    <li *ngFor='#dir of directories'>
+        <span (click)='dir.toggle()'>{{dir.name}}</span>
+        <tree-view *ngIf='dir.expanded' [directories]='dir.directories'></tree-view>
+    </li>
+</ul>
+
+/**
+ * React
+ * 12 Lines
+ * 296 Symbols
+ */
+<ul>
+    {
+        this.directories.map(dir => (
+            <li>
+                <span onClick={() => dir.toggle()}>{dir.name}</span>
+                {
+                    dir.expanded ? <TreeView directories={dir.directories}/> : null
+                }
+            </li>
+        ));
+    }
+</ul>
+
+/**
+ * Reangulact
+ * 6 Lines
+ * 177 Symbols
+ *
+ * 11.5% less than Angular2
+ * 59.7% less than React
+ *
+ */
+<ul>
+    <li each='dir of :directories'>
+        <span click=':dir.toggle'>:dir.name</span>
+        <TreeView if=':dir.expanded' directories=':dir.directories'/>
+    </li>
+</ul>
