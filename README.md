@@ -15,6 +15,12 @@ Most important features:
  - pipes
  - ???
 
+## Life-cycle
+There are only two lifecycle hooks.
+
+* `init` - called when component was mounted.
+* `done` - called when component was unmounted.
+
 ## Example 
 
 in MyList.es6
