@@ -21,6 +21,21 @@ There are only two lifecycle hooks.
 * `init` - called when component was mounted.
 * `done` - called when component was unmounted.
 
+## State
+All component are stateful. There are few features to work with the state.
+
+* `DEFAULTS` - defines initial state
+  Example: const DEFAULTS = {
+    user: {}
+  }
+* `get(<key>)` - returns a value from the state by dots separated key.
+  Example: this.set(‘user.name’)
+* `set(<key>, <value>)` - puts a value into the state under dots separated key. Then calls value changed hook.
+  Example: this.set(‘user.name’, 'Anderson')
+
+Getters are used to override default behavior of getting value. Getter’s name must start with ‘get’.
+For example: getKey() {}
+
 ## Example 
 
 in MyList.es6
